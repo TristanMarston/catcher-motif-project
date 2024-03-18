@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Indie_Flower } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 
 const indieFlower = Indie_Flower({ weight: '400', subsets: ['latin'] });
@@ -16,7 +17,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang='en'>
-            <body className={indieFlower.className}>{children}</body>
+            <body className={indieFlower.className}>
+                {children}
+                <Analytics />
+            </body>
         </html>
     );
 }
