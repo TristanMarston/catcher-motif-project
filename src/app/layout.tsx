@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang='en'>
-            <body className={sniglet.className}>
+            <body className={`${sniglet.className} w-screen h-screen`}>
                 {children}
                 <Analytics />
             </body>

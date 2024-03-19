@@ -11,7 +11,7 @@ const page = () => {
     const [openedModal, setOpenedModal] = useState(false);
 
     return (
-        <div className='min-w-full min-h-screen flex items-center justify-center bg-gradient overflow-hidden'>
+        <div className='min-w-full min-h-full flex items-center justify-center bg-gradient overflow-hidden'>
             <div className='absolute top-4 left-4 flex flex-col items-start gap-3'>
                 <Link className='flex gap-2 items-center justify-center group' href='/'>
                     <Home className='group-hover:text-primary transition-all' />
