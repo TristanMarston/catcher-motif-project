@@ -1,11 +1,9 @@
 import LandingPage from '@/_components/LandingPage';
-import Footer from '@/_components/Footer';
 
 const page = () => {
     return (
-        <div className='min-h-full min-w-full flex flex-col'>
+        <div className='min-w-full min-h-screen flex items-center justify-center bg-gradient'>
             <LandingPage />
-            <Footer />
         </div>
     );
 };
