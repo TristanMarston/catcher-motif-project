@@ -78,7 +78,7 @@ const Holden = () => {
                 <div className='absolute bottom-[5%] flex w-full justify-center gap-5'>
                     <CircleChevronLeft
                         strokeWidth={2.5}
-                        className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer'
+                        className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer select-none'
                         onMouseDown={() => touchMove('left')}
                         onMouseUp={() => touchEnd('left')}
                         onTouchStart={() => touchMove('left')}
@@ -86,7 +86,7 @@ const Holden = () => {
                     />
                     <CircleChevronRight
                         strokeWidth={2.5}
-                        className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer'
+                        className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer select-none'
                         onMouseDown={() => touchMove('right')}
                         onMouseUp={() => touchEnd('right')}
                         onTouchStart={() => touchMove('right')}
