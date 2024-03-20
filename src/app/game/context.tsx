@@ -9,6 +9,14 @@ type Context = {
     setMoney: React.Dispatch<React.SetStateAction<number>>;
     friends: number;
     setFriends: React.Dispatch<React.SetStateAction<number>>;
+    itemsPickedUp: Items;
+    setItemsPickedUp: React.Dispatch<React.SetStateAction<Items>>;
+    movementEnabled: boolean;
+    setMovementEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+type Items = {
+    huntingHat: boolean;
 };
 
 // Create the context
@@ -20,9 +28,17 @@ export const useGameContext = () => useContext(GameContext);
 // Create the provider component
 export const MyProvider = ({ children }: any) => {
     const [xPos, setXPos] = useState(0);
-    const [happiness, setHappiness] = useState(2);
-    const [money, setMoney] = useState(50);
-    const [friends, setFriends] = useState(2);
+    const [happiness, setHappiness] = useState(60);
+    const [money, setMoney] = useState(150);
+    const [friends, setFriends] = useState(5);
+    const [itemsPickedUp, setItemsPickedUp] = useState({ huntingHat: false });
+    const [movementEnabled, setMovementEnabled] = useState(true);
 
-    return <GameContext.Provider value={{ xPos, setXPos, happiness, setHappiness, money, setMoney, friends, setFriends }}>{children}</GameContext.Provider>;
+    return (
+        <GameContext.Provider
+            value={{ xPos, setXPos, happiness, setHappiness, money, setMoney, friends, setFriends, itemsPickedUp, setItemsPickedUp, movementEnabled, setMovementEnabled }}
+        >
+            {children}
+        </GameContext.Provider>
+    );
 };

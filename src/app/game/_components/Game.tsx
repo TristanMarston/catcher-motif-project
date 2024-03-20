@@ -1,28 +1,54 @@
 'use client';
 
-import { useState, Fragment } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Holden from './Holden';
-import { Transition, Dialog } from '@headlessui/react';
+import { Transition } from '@headlessui/react';
 import Link from 'next/link';
-import { BadgeDollarSign, Frown, Handshake, Home, LucideIcon, Meh, Smile, Trophy } from 'lucide-react';
+import { Home, ChevronsRight, Trophy, ChevronsUp, ChevronsDown, Minus } from 'lucide-react';
 import { useGameContext } from '../context';
+import StatsDisplay from './StatsDisplay';
+import Modal from './Modal';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
-type StatDisplay = {
-    name: string;
-    value: number;
-    max: number;
-};
+const cityBuildings: string[] = [
+    '/city-building-1-broken.png',
+    '/city-building-2-broken.png',
+    '/city-building-5.png',
+    '/city-building-6.png',
+    '/city-building-7.png',
+    '/city-building-8.png',
+    '/city-building-9.png',
+    '/city-building-10.png',
+];
 
 const Game = () => {
     const context = useGameContext();
     if (context === undefined) {
         throw new Error('useContext(GameContext) must be used within a GameContext.Provider');
     }
-    const { xPos, setXPos, happiness, setHappiness, money, setMoney, friends, setFriends } = context;
+    const { xPos, setXPos, happiness, setHappiness, money, setMoney, friends, setFriends, itemsPickedUp, setItemsPickedUp } = context;
+    const [achievementsModalOpened, setAchievementsModalOpened] = useState(false);
+    const [huntingHatModalOpened, setHuntingHatModalOpened] = useState(false);
+
+    // positions
+    const redHuntingHatPos = window.innerWidth * 0.7;
 
     const [isShowing, setIsShowing] = useState(false);
     setTimeout(() => setIsShowing(true), 100);
+
+    useEffect(() => {
+        if (xPos >= redHuntingHatPos - (redHuntingHatPos - 210)) {
+            if (itemsPickedUp.huntingHat == false) {
+                setItemsPickedUp((prev) => {
+                    const items = prev;
+                    items.huntingHat = true;
+                    setHuntingHatModalOpened(true);
+                    return items;
+                });
+            }
+        }
+    }, [xPos]);
 
     return (
         <div className='flex flex-col game-position'>
@@ -33,124 +59,105 @@ const Game = () => {
                         <Home className='group-hover:text-primary transition-all' />
                         <p className='group-hover:text-primary transition-all'>back to home</p>
                     </Link>
-                    <Modal />
+                    <div className='flex gap-2 items-center justify-center group cursor-pointer' onClick={() => setAchievementsModalOpened((prev) => !prev)}>
+                        <Trophy className='group-hover:text-primary transition-all' />
+                        <p className='group-hover:text-primary transition-all'>achievements</p>
+                    </div>
+                    <Modal openedModal={achievementsModalOpened} setOpenedModal={setAchievementsModalOpened}>
+                        <div></div>
+                    </Modal>
                 </div>
                 <StatsDisplay />
             </Transition>
 
             {/* actual game */}
-            <Holden />
-            <Transition show={isShowing} appear={false} enter='transition-all duration-[1500ms]' enterFrom='scale-0' enterTo='scale-100'>
-                <div className='w-screen h-1 bg-black' />
-            </Transition>
-        </div>
-    );
-};
-
-type StatsDisplayIconProps = {
-    name: string;
-    value: number;
-    max: number;
-};
-
-const StatsDisplay = () => {
-    const context = useGameContext();
-    if (context === undefined) {
-        throw new Error('useContext(GameContext) must be used within a GameContext.Provider');
-    }
-    const { happiness, money, friends } = context;
-
-    const statsArray: StatDisplay[] = [
-        { name: 'happiness', value: happiness, max: 50 },
-        { name: 'money', value: money, max: 150 },
-        { name: 'friends', value: friends, max: 5 },
-    ];
-
-    const Icon = ({ name, value, max }: StatsDisplayIconProps) => {
-        let newClass = `w-12 laptop:w-20 h-12 laptop:h-20`;
-        if (name == 'happiness') {
-            if (value >= (max / 3) * 2) return <Smile className={newClass} />;
-            if (value >= max / 3) return <Meh className={newClass} />;
-            else return <Frown className={newClass} />;
-        } else if (name == 'money') return <BadgeDollarSign className={newClass} />;
-        else if (name == 'friends') return <Handshake className={newClass} />;
-    };
-
-    return (
-        <div className='absolute top-4 right-4 flex flex-col taptop:flex-row gap-5'>
-            {statsArray.map((stat, index) => (
-                <div
-                    key={stat.name + index}
-                    className='flex items-center rounded-md gap-2 w-48 laptop:w-56 px-5 lobile:py-1.5 border-[3px] border-primary shadow-[5px_5px_0px_0px_#de9292] hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] cursor-pointer transition-all'
-                >
-                    <Icon name={stat.name} value={stat.value} max={stat.max} />
-                    <div className='w-full flex gap-2 justify-start items-center lobile:block lobile:justify-center'>
-                        <h1 className='hidden lobile:block text-xl laptop:text-2xl font-bold'>{stat.name}</h1>
-                        <div className='relative bottom-2 w-full lobile:relative lobile:bottom-2.5 lobile:block'>
-                            <div
-                                className={cn(
-                                    'relative flex justify-center items-center top-4 lobile:top-4 rounded-full w-full h-4 z-[9999] shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]',
-                                    stat.value >= (stat.max / 3) * 2 ? 'bg-success' : stat.value >= stat.max / 3 ? 'bg-warning' : 'bg-error'
-                                )}
-                                style={{ width: `${(stat.value / stat.max) * 100}%` }}
+            <Transition
+                show={isShowing}
+                appear={false}
+                enter='transition-all duration-[1500ms]'
+                enterFrom='opacity-0'
+                enterTo='opacity-100'
+                className='h-full w-screen flex flex-col absolute -bottom-56 lesktop:-bottom-44 left-0'
+            >
+                <div className='flex max-h-[12.5rem] w-screen'>
+                    <img
+                        src='/holden-red-hunting-hat.png'
+                        className='relative flex max-h-[12.5rem] w-16 h-16 top-[360px] lesktop:top-[488px] rounded-full'
+                        style={{ left: `${-xPos <= 0 ? -xPos + redHuntingHatPos : redHuntingHatPos}px` }}
+                    />
+                    <Modal openedModal={huntingHatModalOpened} setOpenedModal={setHuntingHatModalOpened}>
+                        <div className='w-full h-full p-6 flex flex-col gap-2'>
+                            <h1 className='font-extrabold tracking-wider text-3xl'>Holden's Red Hunting Hat</h1>
+                            <div className='flex flex-col mb-2'>
+                                <p className='flex items-center gap-1 text-lg'>
+                                    <ChevronsUp className='h-10 w-10 text-success' />
+                                    <p>10% happiness</p>
+                                </p>
+                                <p className='flex items-center gap-1 text-lg'>
+                                    <ChevronsDown className='h-10 w-10 text-error' />
+                                    <p>$1 money</p>
+                                </p>
+                                <p className='flex items-center gap-1 text-lg'>
+                                    <Minus className='h-10 w-10 text-blue-300' />
+                                    <p>0 friends</p>
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    setHappiness((prev) => prev + 10);
+                                    setMoney((prev) => prev - 1);
+                                    setHuntingHatModalOpened(false);
+                                }}
+                                className='text-md w-full lobile:text-lg outline-none tablet:text-xl flex items-center justify-center rounded-lg py-2 lobile:py-3 bg-primary text-white font-black tracking-wider shadow-[0_7px_0_#da8484] hover:shadow-none hover:translate-y-[7px] transition-all'
                             >
-                                {stat.name == 'money' && stat.value >= stat.max / 3 ? `$${stat.value}` : ''}
-                                {stat.name == 'friends' && stat.value >= stat.max / 3 ? `${stat.value}` : ''}
-                            </div>
-                            <div className='relative rounded-full flex justify-center items-center w-full h-4 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]'>
-                                {stat.name == 'money' && stat.value < stat.max / 3 ? `$${stat.value}` : ''}
-                                {stat.name == 'friends' && stat.value < stat.max / 3 ? `${stat.value}` : ''}
-                            </div>
+                                Accept
+                            </button>
                         </div>
-                    </div>
+                    </Modal>
                 </div>
-            ))}
+                <div className='w-screen max-h-[12.5rem] hidden lesktop:flex lesktop:ml-16 desktop:ml-24'>
+                    {Array.from({ length: 3 }).map((_, index) => (
+                        <ChevronsRight className={cn('relative w-32 h-full top-[350px]', window.innerWidth)} strokeWidth={2} style={{ left: `${-xPos <= 0 ? -xPos : 0}px` }} />
+                    ))}
+                </div>
+                <div className='flex ml-[80%]'>
+                    <CityBuildings xPos={xPos} />
+                </div>
+                <Holden />
+                <div>
+                    <div className='w-[300vw] h-1 bg-black absolute' style={{ left: `${-xPos <= 0 ? -xPos : 0}px` }} />
+                </div>
+            </Transition>
         </div>
     );
 };
 
-const Modal = () => {
-    const [openedModal, setOpenedModal] = useState(false);
+type CityBuildingsProps = {
+    xPos: number;
+};
 
-    return (
-        <>
-            <div className='flex gap-2 items-center justify-center group cursor-pointer' onClick={() => setOpenedModal((prev) => !prev)}>
-                <Trophy className='group-hover:text-primary transition-all' />
-                <p className='group-hover:text-primary transition-all'>achievements</p>
-            </div>
-            <Transition show={openedModal} as={Fragment}>
-                <Dialog as='div' className='relative z-50' onClose={setOpenedModal}>
-                    <Transition.Child
-                        as={Fragment}
-                        enter='ease-out duration-300'
-                        enterFrom='opacity-0'
-                        enterTo='opacity-100'
-                        leave='ease-in duration-200'
-                        leaveFrom='opacity-100'
-                        leaveTo='opacity-0'
-                    >
-                        <div className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
-                    </Transition.Child>
+const CityBuildings = ({ xPos }: CityBuildingsProps) => {
+    const cityBuildingImages = useMemo(() => {
+        return Array.from({ length: 30 }).map((_, index) => {
+            const src = cityBuildings[Math.floor(Math.random() * cityBuildings.length)];
+            const marginRight = `${Math.floor(Math.random() * 500) + 20}px`;
+            return { key: index, src, marginRight };
+        });
+    }, []);
 
-                    <div className='fixed inset-0 z-10 w-screen overflow-y-auto'>
-                        <div className='flex min-h-screen min-w-screen items-center justify-center p-4 text-center sm:items-center sm:p-0'>
-                            <Transition.Child
-                                as={Fragment}
-                                enter='ease-out duration-300'
-                                enterFrom='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
-                                enterTo='opacity-100 translate-y-0 sm:scale-100'
-                                leave='ease-in duration-200'
-                                leaveFrom='opacity-100 translate-y-0 sm:scale-100'
-                                leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
-                            >
-                                <Dialog.Panel className='relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all w-[36rem] h-[24rem]'></Dialog.Panel>
-                            </Transition.Child>
-                        </div>
-                    </div>
-                </Dialog>
-            </Transition>
-        </>
-    );
+    // style={{ left: `${-xPos <= 0 ? -xPos : 0}px`, marginRight: `${Math.floor(Math.random() * 500) + 20}px` }}
+
+    return cityBuildingImages.map(({ key, src, marginRight }) => (
+        <img
+            key={key}
+            src={src}
+            alt='citybuilding'
+            width='w-full'
+            height='h-full'
+            className='relative top-40 opacity-[30%]'
+            style={{ left: `${-xPos <= 0 ? -xPos : 0}px`, marginRight: marginRight }}
+        />
+    ));
 };
 
 export default Game;

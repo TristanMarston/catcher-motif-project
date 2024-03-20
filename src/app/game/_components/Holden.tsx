@@ -11,7 +11,7 @@ const Holden = () => {
     if (context === undefined) {
         throw new Error('useContext(GameContext) must be used within a GameContext.Provider');
     }
-    const { xPos, setXPos } = context;
+    const { xPos, setXPos, movementEnabled } = context;
     const [keyState, setKeyState] = useState<{ [key: string]: boolean }>({});
 
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -29,11 +29,14 @@ const Holden = () => {
     };
 
     const moveCharacter = () => {
-        if (keyState['ArrowLeft'] || keyState['a'] || keyState['left']) {
-            setXPos((prevX) => prevX - 2.5); // Move left by reducing x position
-        }
-        if (keyState['ArrowRight'] || keyState['d'] || keyState['right']) {
-            setXPos((prevX) => prevX + 2.5); // Move right by increasing x position
+        if (movementEnabled) {
+            if (keyState['ArrowLeft'] || keyState['a'] || keyState['left']) {
+                setXPos((prevX) => (prevX - 5 >= 0 && movementEnabled ? prevX - 5 : prevX)); // Move left by reducing x position
+            }
+            if (keyState['ArrowRight'] || keyState['d'] || keyState['right']) {
+                console.log(movementEnabled ? 'what' : 'yay');
+                setXPos((prevX) => (movementEnabled ? prevX + 5 : prevX)); // Move right by increasing x position
+            }
         }
     };
 
@@ -64,18 +67,18 @@ const Holden = () => {
         }));
     };
 
+    useEffect(() => {
+        console.log('movementEnabled (holden): ' + movementEnabled);
+    }, [movementEnabled]);
+
     return (
         <>
-            <Transition show={showHolden} appear={false} enter='transition-all duration-[1500ms]' enterFrom='scale-0' enterTo='scale-100' className='w-full flex justify-center'>
-                <div
-                    className='bg-red-400 w-16 h-40 relative'
-                    style={{
-                        left: `${xPos}px`,
-                    }}
-                />
+            <Transition show={showHolden} appear={false} enter='transition-all duration-[1500ms]' enterFrom='opacity-0' enterTo='opacity-100' className='w-full flex justify-center'>
+                {/* <div className='bg-red-400 w-16 h-40 relative' /> */}
+                <img src='/holden-stick-figure.png' className='h-40 relative' />
             </Transition>
             <Transition show={showHolden} appear={false} enter='transition-all duration-[1500ms]' enterFrom='opacity-0' enterTo='opacity-100'>
-                <div className='absolute bottom-[5%] flex w-full justify-center gap-5'>
+                <div className='absolute bottom-[35%] lesktop:bottom-[25%] left-0 w-full flex justify-center gap-5'>
                     <CircleChevronLeft
                         strokeWidth={2.5}
                         className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer select-none border-transparent'

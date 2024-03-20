@@ -19,6 +19,7 @@ const config = {
             tablet: '650px',
             taptop: '820px',
             laptop: '960px',
+            lesktop: '1080px',
             desktop: '1280px',
         },
         extend: {
