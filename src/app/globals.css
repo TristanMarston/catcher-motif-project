@@ -18,3 +18,15 @@
         overflow: hidden;
     }
 }
+
+@media (min-height: 550px) {
+    .game-position {
+        margin-top: 10rem;
+    }
+}
+
+@media (min-height: 700px) {
+    .game-position {
+        margin-top: 18rem;
+    }
+}

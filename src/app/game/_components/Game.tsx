@@ -25,7 +25,7 @@ const Game = () => {
     setTimeout(() => setIsShowing(true), 100);
 
     return (
-        <div className='flex flex-col mt-72'>
+        <div className='flex flex-col game-position'>
             {/* nav & stats */}
             <Transition show={isShowing} appear={false} enter='transition-all duration-[1500ms]' enterFrom='opacity-0' enterTo='opacity-100'>
                 <div className='absolute top-4 left-4 flex flex-col items-start gap-3'>
@@ -119,7 +119,7 @@ const Modal = () => {
                 <p className='group-hover:text-primary transition-all'>achievements</p>
             </div>
             <Transition show={openedModal} as={Fragment}>
-                <Dialog as='div' className='relative z-10' onClose={setOpenedModal}>
+                <Dialog as='div' className='relative z-50' onClose={setOpenedModal}>
                     <Transition.Child
                         as={Fragment}
                         enter='ease-out duration-300'
