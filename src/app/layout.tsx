@@ -16,8 +16,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang='en' className='min-h-full'>
-            <body className={`${sniglet.className} min-w-full min-h-full flex flex-col m-0 p-0`}>
+        <html lang='en' className='min-h-full overflow-hidden'>
+            <body className={`${sniglet.className} min-w-full min-h-full flex flex-col m-0 p-0 overflow-hidden`}>
                 {children}
                 <Analytics />
             </body>

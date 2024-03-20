@@ -42,6 +42,10 @@ const config = {
 
                 background: '#F4E4E4',
                 'background-dark': '#edd3d3',
+
+                success: '#bceabc',
+                warning: '#eaeabc',
+                error: '#eabcbc',
             },
         },
     },

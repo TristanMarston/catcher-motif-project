@@ -30,10 +30,10 @@ const Holden = () => {
 
     const moveCharacter = () => {
         if (keyState['ArrowLeft'] || keyState['a'] || keyState['left']) {
-            setXPos((prevX) => prevX - 5); // Move left by reducing x position
+            setXPos((prevX) => prevX - 2.5); // Move left by reducing x position
         }
         if (keyState['ArrowRight'] || keyState['d'] || keyState['right']) {
-            setXPos((prevX) => prevX + 5); // Move right by increasing x position
+            setXPos((prevX) => prevX + 2.5); // Move right by increasing x position
         }
     };
 
@@ -41,7 +41,7 @@ const Holden = () => {
         window.addEventListener('keydown', handleKeyPress);
         window.addEventListener('keyup', handleKeyRelease);
 
-        const interval = setInterval(moveCharacter, 1000 / 60); // Adjust this value for smoother movement
+        const interval = setInterval(moveCharacter, 1000 / 120); // Adjust this value for smoother movement
 
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
@@ -78,7 +78,7 @@ const Holden = () => {
                 <div className='absolute bottom-[5%] flex w-full justify-center gap-5'>
                     <CircleChevronLeft
                         strokeWidth={2.5}
-                        className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer select-none'
+                        className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer select-none border-transparent'
                         onMouseDown={() => touchMove('left')}
                         onMouseUp={() => touchEnd('left')}
                         onTouchStart={() => touchMove('left')}
@@ -86,7 +86,7 @@ const Holden = () => {
                     />
                     <CircleChevronRight
                         strokeWidth={2.5}
-                        className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer select-none'
+                        className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer select-none border-transparent'
                         onMouseDown={() => touchMove('right')}
                         onMouseUp={() => touchEnd('right')}
                         onTouchStart={() => touchMove('right')}
