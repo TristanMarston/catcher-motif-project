@@ -32,7 +32,8 @@ const Game = () => {
     const [huntingHatModalOpened, setHuntingHatModalOpened] = useState(false);
 
     // positions
-    const redHuntingHatPos = window.innerWidth * 0.7;
+    let redHuntingHatPos = 0;
+    if (typeof window !== 'undefined') redHuntingHatPos = window.innerWidth * 0.6;
 
     const [isShowing, setIsShowing] = useState(false);
     setTimeout(() => setIsShowing(true), 100);
@@ -117,7 +118,7 @@ const Game = () => {
                 </div>
                 <div className='w-screen max-h-[12.5rem] hidden lesktop:flex lesktop:ml-16 desktop:ml-24'>
                     {Array.from({ length: 3 }).map((_, index) => (
-                        <ChevronsRight className={cn('relative w-32 h-full top-[350px]', window.innerWidth)} strokeWidth={2} style={{ left: `${-xPos <= 0 ? -xPos : 0}px` }} />
+                        <ChevronsRight className={cn('relative w-32 h-full top-[350px]')} strokeWidth={2} style={{ left: `${-xPos <= 0 ? -xPos : 0}px` }} />
                     ))}
                 </div>
                 <div className='flex ml-[80%]'>
