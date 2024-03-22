@@ -1,8 +1,8 @@
 'use client';
 
 import { Toaster } from 'react-hot-toast';
-import { MyProvider } from '../game/context';
-import StatsDisplay from '../game/_components/StatsDisplay';
+import { MyProvider } from '../context';
+import StatsDisplay from '../_components/StatsDisplay';
 import Link from 'next/link';
 
 const page = () => {

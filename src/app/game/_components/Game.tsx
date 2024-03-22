@@ -28,7 +28,7 @@ const Game = () => {
     if (context === undefined) {
         throw new Error('useContext(GameContext) must be used within a GameContext.Provider');
     }
-    const { xPos, setXPos, happiness, setHappiness, money, setMoney, innocence, setInnocence, progress, setProgress } = context;
+    const { xPos, setXPos, happiness, setHappiness, money, setMoney, innocence, setInnocence, progress, setProgress, movementEnabled, setMovementEnabled } = context;
     const [achievementsModalOpened, setAchievementsModalOpened] = useState(false);
     const [huntingHatModalOpened, setHuntingHatModalOpened] = useState(false);
     const [expulsionModalOpened, setExpulsionModalOpened] = useState(false);
@@ -65,6 +65,7 @@ const Game = () => {
                     const items = prev;
                     items[0].reached = true;
                     setHuntingHatModalOpened(true);
+                    setMovementEnabled(false);
                     return items;
                 });
             }
@@ -78,6 +79,7 @@ const Game = () => {
                     const items = prev;
                     items[4].reached = true;
                     setExpulsionModalOpened(true);
+                    setMovementEnabled(false);
                     return items;
                 });
             }
@@ -85,7 +87,7 @@ const Game = () => {
     }, [xPos]);
 
     useEffect(() => {
-        if (finalDestinationDecision.length > 0) router.push('/end');
+        if (finalDestinationDecision.length > 0) router.push('/game/end');
     }, [finalDestinationDecision]);
 
     return (
@@ -101,9 +103,9 @@ const Game = () => {
                         <Trophy className='group-hover:text-primary transition-all' />
                         <p className='group-hover:text-primary transition-all'>achievements</p>
                     </div> */}
-                    <Modal openedModal={achievementsModalOpened} setOpenedModal={setAchievementsModalOpened}>
+                    {/* <Modal openedModal={achievementsModalOpened} setOpenedModal={setAchievementsModalOpened}>
                         <div></div>
-                    </Modal>
+                    </Modal> */}
                 </div>
                 <StatsDisplay />
             </Transition>
@@ -146,6 +148,7 @@ const Game = () => {
                                         return items;
                                     });
                                 }
+                                setMovementEnabled(true);
                                 setHuntingHatModalOpened(false);
                             }}
                             className='text-md w-full lobile:text-lg outline-none tablet:text-xl flex items-center justify-center rounded-lg py-2 lobile:py-3 bg-primary text-white font-black tracking-wider shadow-[0_7px_0_#da8484] hover:shadow-none hover:translate-y-[7px] transition-all'
@@ -304,6 +307,7 @@ const Game = () => {
                                                     });
                                                     toast(<h3 className='font-bold text-2xl w-full'>You may not return home or to Pencey now.</h3>);
                                                 }
+                                                setMovementEnabled(true);
                                                 setExpulsionModalOpened(false);
                                             }}
                                             className='text-md w-full lobile:text-lg outline-none tablet:text-xl flex items-center justify-center rounded-lg py-2 lobile:py-3 bg-primary text-white font-black tracking-wider shadow-[0_7px_0_#da8484] hover:shadow-none hover:translate-y-[7px] transition-all'
@@ -450,7 +454,7 @@ const Decision = ({ decision, setDecision, title, options, position, progressNum
     if (context === undefined) {
         throw new Error('useContext(GameContext) must be used within a GameContext.Provider');
     }
-    const { xPos, progress, setProgress, setHappiness, setMoney, setInnocence } = context;
+    const { xPos, progress, setProgress, setHappiness, setMoney, setInnocence, movementEnabled, setMovementEnabled } = context;
 
     useEffect(() => {
         if (xPos >= position - 40 && xPos < position) {
@@ -459,11 +463,16 @@ const Decision = ({ decision, setDecision, title, options, position, progressNum
                     const items = prev;
                     items[progressNum].reached = true;
                     setOpenedModal(true);
+                    setMovementEnabled(false);
                     return items;
                 });
             }
         }
     }, [xPos]);
+
+    useEffect(() => {
+        setMovementEnabled(!openedModal);
+    }, [openedModal]);
 
     const ArrowIcon = ({ value }: IconProps) => {
         if (value > 0) return <ChevronsUp className='text-success' strokeWidth={3} />;
