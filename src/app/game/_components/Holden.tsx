@@ -2,6 +2,7 @@ import { CircleChevronLeft, CircleChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useGameContext } from '../context';
 import { Transition } from '@headlessui/react';
+import { cn } from '@/lib/utils';
 
 const Holden = () => {
     const [showHolden, setShowHolden] = useState(false);
@@ -11,7 +12,7 @@ const Holden = () => {
     if (context === undefined) {
         throw new Error('useContext(GameContext) must be used within a GameContext.Provider');
     }
-    const { xPos, setXPos, movementEnabled } = context;
+    const { xPos, setXPos, movementEnabled, progress } = context;
     const [keyState, setKeyState] = useState<{ [key: string]: boolean }>({});
 
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -73,8 +74,16 @@ const Holden = () => {
 
     return (
         <>
-            <Transition show={showHolden} appear={false} enter='transition-all duration-[1500ms]' enterFrom='opacity-0' enterTo='opacity-100' className='w-full flex justify-center'>
+            <Transition
+                show={showHolden}
+                appear={false}
+                enter='transition-all duration-[1500ms]'
+                enterFrom='opacity-0'
+                enterTo='opacity-100'
+                className={cn('w-full flex justify-center', progress[0].completed ? 'flex-col items-center' : 'flex-row')}
+            >
                 {/* <div className='bg-red-400 w-16 h-40 relative' /> */}
+                <img src='/holden-red-hunting-hat.png' className={cn('relative max-h-[12.5rem] w-16 h-16 rounded-full top-6 right-3 z-10', !progress[0].completed ? ' hidden' : 'flex')} />
                 <img src='/holden-stick-figure.png' className='h-40 relative' />
             </Transition>
             <Transition show={showHolden} appear={false} enter='transition-all duration-[1500ms]' enterFrom='opacity-0' enterTo='opacity-100'>

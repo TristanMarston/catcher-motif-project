@@ -9,14 +9,16 @@ type Context = {
     setMoney: React.Dispatch<React.SetStateAction<number>>;
     friends: number;
     setFriends: React.Dispatch<React.SetStateAction<number>>;
-    itemsPickedUp: Items;
-    setItemsPickedUp: React.Dispatch<React.SetStateAction<Items>>;
+    progress: Items[];
+    setProgress: React.Dispatch<React.SetStateAction<Items[]>>;
     movementEnabled: boolean;
     setMovementEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type Items = {
-    huntingHat: boolean;
+    name: string;
+    reached: boolean;
+    completed: boolean;
 };
 
 // Create the context
@@ -31,12 +33,12 @@ export const MyProvider = ({ children }: any) => {
     const [happiness, setHappiness] = useState(60);
     const [money, setMoney] = useState(150);
     const [friends, setFriends] = useState(5);
-    const [itemsPickedUp, setItemsPickedUp] = useState({ huntingHat: false });
+    const [progress, setProgress] = useState<Items[]>([{ name: 'hunting hat', reached: false, completed: false }]);
     const [movementEnabled, setMovementEnabled] = useState(true);
 
     return (
         <GameContext.Provider
-            value={{ xPos, setXPos, happiness, setHappiness, money, setMoney, friends, setFriends, itemsPickedUp, setItemsPickedUp, movementEnabled, setMovementEnabled }}
+            value={{ xPos, setXPos, happiness, setHappiness, money, setMoney, friends, setFriends, progress, setProgress, movementEnabled, setMovementEnabled }}
         >
             {children}
         </GameContext.Provider>

@@ -27,7 +27,7 @@ const Game = () => {
     if (context === undefined) {
         throw new Error('useContext(GameContext) must be used within a GameContext.Provider');
     }
-    const { xPos, setXPos, happiness, setHappiness, money, setMoney, friends, setFriends, itemsPickedUp, setItemsPickedUp } = context;
+    const { xPos, setXPos, happiness, setHappiness, money, setMoney, friends, setFriends, progress, setProgress } = context;
     const [achievementsModalOpened, setAchievementsModalOpened] = useState(false);
     const [huntingHatModalOpened, setHuntingHatModalOpened] = useState(false);
 
@@ -40,10 +40,10 @@ const Game = () => {
 
     useEffect(() => {
         if (xPos >= redHuntingHatPos - (redHuntingHatPos - 210)) {
-            if (itemsPickedUp.huntingHat == false) {
-                setItemsPickedUp((prev) => {
+            if (progress[0].reached == false) {
+                setProgress((prev) => {
                     const items = prev;
-                    items.huntingHat = true;
+                    items[0].reached = true;
                     setHuntingHatModalOpened(true);
                     return items;
                 });
@@ -83,7 +83,7 @@ const Game = () => {
                 <div className='flex max-h-[12.5rem] w-screen'>
                     <img
                         src='/holden-red-hunting-hat.png'
-                        className='relative flex max-h-[12.5rem] w-16 h-16 top-[360px] lesktop:top-[488px] rounded-full'
+                        className={cn('relative flex max-h-[12.5rem] w-16 h-16 top-[360px] lesktop:top-[488px] rounded-full', progress[0].completed && ' hidden')}
                         style={{ left: `${-xPos <= 0 ? -xPos + redHuntingHatPos : redHuntingHatPos}px` }}
                     />
                     <Modal openedModal={huntingHatModalOpened} setOpenedModal={setHuntingHatModalOpened}>
@@ -105,8 +105,15 @@ const Game = () => {
                             </div>
                             <button
                                 onClick={() => {
-                                    setHappiness((prev) => prev + 10);
-                                    setMoney((prev) => prev - 1);
+                                    if (!progress[0].completed) {
+                                        setHappiness((prev) => prev + 10);
+                                        setMoney((prev) => prev - 1);
+                                        setProgress((prev) => {
+                                            const items = [...prev];
+                                            items[0].completed = true;
+                                            return items;
+                                        });
+                                    }
                                     setHuntingHatModalOpened(false);
                                 }}
                                 className='text-md w-full lobile:text-lg outline-none tablet:text-xl flex items-center justify-center rounded-lg py-2 lobile:py-3 bg-primary text-white font-black tracking-wider shadow-[0_7px_0_#da8484] hover:shadow-none hover:translate-y-[7px] transition-all'
