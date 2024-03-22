@@ -42,6 +42,7 @@ const config = {
                 'primary-dark': '#da8484',
 
                 background: '#F4E4E4',
+                'background-darkish': '#edd3d3',
                 'background-dark': '#edd3d3',
 
                 success: '#bceabc',

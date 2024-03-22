@@ -35,7 +35,6 @@ const Holden = () => {
                 setXPos((prevX) => (prevX - 5 >= 0 && movementEnabled ? prevX - 5 : prevX)); // Move left by reducing x position
             }
             if (keyState['ArrowRight'] || keyState['d'] || keyState['right']) {
-                console.log(movementEnabled ? 'what' : 'yay');
                 setXPos((prevX) => (movementEnabled ? prevX + 5 : prevX)); // Move right by increasing x position
             }
         }
@@ -68,10 +67,6 @@ const Holden = () => {
         }));
     };
 
-    useEffect(() => {
-        console.log('movementEnabled (holden): ' + movementEnabled);
-    }, [movementEnabled]);
-
     return (
         <>
             <Transition
@@ -80,14 +75,17 @@ const Holden = () => {
                 enter='transition-all duration-[1500ms]'
                 enterFrom='opacity-0'
                 enterTo='opacity-100'
-                className={cn('w-full flex justify-center', progress[0].completed ? 'flex-col items-center' : 'flex-row')}
+                className={cn('w-full flex justify-center absolute bottom-20 h-[224px]')}
             >
                 {/* <div className='bg-red-400 w-16 h-40 relative' /> */}
-                <img src='/holden-red-hunting-hat.png' className={cn('relative max-h-[12.5rem] w-16 h-16 rounded-full top-6 right-3 z-10', !progress[0].completed ? ' hidden' : 'flex')} />
-                <img src='/holden-stick-figure.png' className='h-40 relative' />
-            </Transition>
-            <Transition show={showHolden} appear={false} enter='transition-all duration-[1500ms]' enterFrom='opacity-0' enterTo='opacity-100'>
-                <div className='absolute bottom-[35%] lesktop:bottom-[25%] left-0 w-full flex justify-center gap-5'>
+                <div className={cn('flex justify-center h-[224px] items-end', progress[0].completed ? 'flex-col items-center' : 'flex-row')}>
+                    <img
+                        src='/holden-red-hunting-hat.png'
+                        className={cn('relative max-h-[12.5rem] w-16 h-16 rounded-full top-6 right-3 z-10', !progress[0].completed ? ' hidden' : 'flex')}
+                    />
+                    <img src='/holden-stick-figure.png' className='h-40 relative' />
+                </div>
+                <div className='absolute -bottom-28 left-0 w-full flex justify-center gap-5'>
                     <CircleChevronLeft
                         strokeWidth={2.5}
                         className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer select-none border-transparent'

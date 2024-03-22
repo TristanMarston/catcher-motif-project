@@ -7,8 +7,8 @@ type Context = {
     setHappiness: React.Dispatch<React.SetStateAction<number>>;
     money: number;
     setMoney: React.Dispatch<React.SetStateAction<number>>;
-    friends: number;
-    setFriends: React.Dispatch<React.SetStateAction<number>>;
+    innocence: number;
+    setInnocence: React.Dispatch<React.SetStateAction<number>>;
     progress: Items[];
     setProgress: React.Dispatch<React.SetStateAction<Items[]>>;
     movementEnabled: boolean;
@@ -31,15 +31,25 @@ export const useGameContext = () => useContext(GameContext);
 export const MyProvider = ({ children }: any) => {
     const [xPos, setXPos] = useState(0);
     const [happiness, setHappiness] = useState(60);
-    const [money, setMoney] = useState(150);
-    const [friends, setFriends] = useState(5);
-    const [progress, setProgress] = useState<Items[]>([{ name: 'hunting hat', reached: false, completed: false }]);
+    const [money, setMoney] = useState(50);
+    const [innocence, setInnocence] = useState(60);
+    const [progress, setProgress] = useState<Items[]>([
+        { name: 'hunting hat', reached: false, completed: false },
+        { name: 'stradlater', reached: false, completed: false },
+        { name: 'leave pencey', reached: false, completed: false },
+        { name: 'call', reached: false, completed: false },
+        { name: 'letter', reached: false, completed: false },
+        { name: 'first destination', reached: false, completed: false },
+        { name: 'hotel interaction', reached: false, completed: false },
+        { name: 'central park', reached: false, completed: false },
+        { name: 'museum', reached: false, completed: false },
+        { name: 'drink', reached: false, completed: false },
+        { name: 'final destination', reached: false, completed: false },
+    ]);
     const [movementEnabled, setMovementEnabled] = useState(true);
 
     return (
-        <GameContext.Provider
-            value={{ xPos, setXPos, happiness, setHappiness, money, setMoney, friends, setFriends, progress, setProgress, movementEnabled, setMovementEnabled }}
-        >
+        <GameContext.Provider value={{ xPos, setXPos, happiness, setHappiness, money, setMoney, innocence, setInnocence, progress, setProgress, movementEnabled, setMovementEnabled }}>
             {children}
         </GameContext.Provider>
     );

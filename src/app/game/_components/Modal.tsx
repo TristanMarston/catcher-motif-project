@@ -15,19 +15,10 @@ const Modal = ({ openedModal, setOpenedModal, children }: Props) => {
     }
     const { movementEnabled, setMovementEnabled } = context;
 
-    useEffect(() => {
-        console.log(!openedModal);
-        setMovementEnabled(!openedModal);
-    }, [openedModal]);
-
-    useEffect(() => {
-        console.log('movementEnabled (modal): ' + movementEnabled);
-    }, [movementEnabled]);
-
     return (
         <>
             <Transition show={openedModal} as={Fragment}>
-                <Dialog as='div' className='relative z-[9999]' onClose={setOpenedModal}>
+                <Dialog as='div' className='relative z-[999]' onClose={setOpenedModal}>
                     <Transition.Child
                         as={Fragment}
                         enter='ease-out duration-300'
