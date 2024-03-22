@@ -41,7 +41,7 @@ const LandingPage = () => {
                     href='/'
                     className='text-md lobile:text-lg tablet:text-xl flex items-center justify-center bg-transparent border-primary border-2 rounded-lg py-2 lobile:py-3 text-primary font-black tracking-wider shadow-[0_5px_0_#de9292] hover:shadow-none hover:translate-y-[5px] transition-all'
                 >
-                    EXPLANATION
+                    BY TRISTAN MARSTON
                 </Link>
             </div>
         </div>
