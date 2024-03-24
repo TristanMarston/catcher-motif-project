@@ -98,16 +98,16 @@ const Holden = () => {
                     <CircleChevronLeft
                         strokeWidth={2.5}
                         className='w-14 h-14 hover:scale-110 rounded-full transition-all cursor-pointer select-none border-transparent'
-                        onMouseDown={() => (inputMethod == 'mouse' && movementEnabled ? touchMove('left') : {})}
-                        onMouseUp={() => (inputMethod == 'mouse' && movementEnabled ? touchEnd('left') : {})}
+                        onMouseDown={() => (inputMethod == 'mouse' ? touchMove('left') : {})}
+                        onMouseUp={() => (inputMethod == 'mouse' ? touchEnd('left') : {})}
                         onTouchStart={() => (inputMethod == 'touch' ? touchMove('left') : {})}
                         onTouchEnd={() => (inputMethod == 'touch' ? touchEnd('left') : {})}
                     />
                     <CircleChevronRight
                         strokeWidth={2.5}
                         className='w-14 h-14 hover:scale-110 rounded-full transition-all cursor-pointer select-none border-transparent'
-                        onMouseDown={() => (inputMethod == 'mouse' && movementEnabled ? touchMove('right') : {})}
-                        onMouseUp={() => (inputMethod == 'mouse' && movementEnabled ? touchEnd('right') : {})}
+                        onMouseDown={() => (inputMethod == 'mouse' ? touchMove('right') : {})}
+                        onMouseUp={() => (inputMethod == 'mouse' ? touchEnd('right') : {})}
                         onTouchStart={() => (inputMethod == 'touch' ? touchMove('right') : {})}
                         onTouchEnd={() => (inputMethod == 'touch' ? touchEnd('right') : {})}
                     />
