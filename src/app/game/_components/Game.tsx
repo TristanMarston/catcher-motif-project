@@ -29,7 +29,6 @@ const Game = () => {
         throw new Error('useContext(GameContext) must be used within a GameContext.Provider');
     }
     const { xPos, setXPos, happiness, setHappiness, money, setMoney, innocence, setInnocence, progress, setProgress, movementEnabled, setMovementEnabled } = context;
-    const [achievementsModalOpened, setAchievementsModalOpened] = useState(false);
     const [huntingHatModalOpened, setHuntingHatModalOpened] = useState(false);
     const [expulsionModalOpened, setExpulsionModalOpened] = useState(false);
     const router = useRouter();
@@ -87,7 +86,12 @@ const Game = () => {
     }, [xPos]);
 
     useEffect(() => {
-        if (finalDestinationDecision.length > 0) router.push('/game/end');
+        if (huntingHatModalOpened) setMovementEnabled(false);
+        else setMovementEnabled(true);
+    }, [huntingHatModalOpened]);
+
+    useEffect(() => {
+        if (finalDestinationDecision.length > 0) router.push(`/game/end?happiness=${happiness}&money=${money}&innocence=${innocence}`);
     }, [finalDestinationDecision]);
 
     return (
@@ -107,7 +111,7 @@ const Game = () => {
                         <div></div>
                     </Modal> */}
                 </div>
-                <StatsDisplay />
+                <StatsDisplay happiness={happiness} money={money} innocence={innocence} />
             </Transition>
 
             {/* actual game */}
@@ -162,9 +166,9 @@ const Game = () => {
                         <ChevronsRight key={index} className={cn('relative w-24 lesktop:w-32 h-full top-[350px]')} strokeWidth={2} style={{ left: `${-xPos <= 0 ? -xPos : 0}px` }} />
                     ))}
                 </div> */}
-                <div className='absolute bottom-24 ml-10 flex flex-col justify-center max-h-[300px]' style={{ left: `${-xPos <= 0 ? -xPos : 0}px` }}>
-                    <h1 className='text-3xl text-center font-bold'>PENCEY PREP</h1>
-                    <img src='/school.png' className='w-48 h-48 tablet:w-72 tablet:h-72' />
+                <div className='absolute bottom-24 ml-5 lobile:ml-10 flex flex-col justify-center max-h-[300px]' style={{ left: `${-xPos <= 0 ? -xPos : 0}px` }}>
+                    <h1 className='text-lg lobile:text-xl mablet:text-3xl text-center font-bold'>PENCEY PREP</h1>
+                    <img src='/school.png' className='w-24 lobile:w-32 h-24 lobile:h-32 mablet:w-48 mablet:h-48 min-[770px]:w-72 min-[770px]:h-72' />
                 </div>
                 <div className='absolute ml-[80%] bottom-60 max-h-[300px]'>
                     <div className='flex'>
@@ -257,6 +261,7 @@ const Game = () => {
                                                     });
                                                     toast(<h3 className='font-bold text-2xl w-full'>You may not return home or to Pencey now.</h3>);
                                                 }
+                                                setMovementEnabled(true);
                                                 setExpulsionModalOpened(false);
                                             }}
                                             className='text-md w-full lobile:text-lg outline-none tablet:text-xl flex items-center justify-center rounded-lg py-2 lobile:py-3 bg-primary text-white font-black tracking-wider shadow-[0_7px_0_#da8484] hover:shadow-none hover:translate-y-[7px] transition-all'
@@ -516,7 +521,7 @@ const Decision = ({ decision, setDecision, title, options, position, progressNum
                                 className={cn(
                                     'text-xl outline-none flex items-center justify-between px-4 border-primary border-2 rounded-lg py-2 lobile:py-3 text-primary font-black tracking-wider transition-all',
                                     selectedOption == index
-                                        ? 'bg-primary border-primary-dark text-white shadow-[0_5px_0_#da8484] -mt-[5px]'
+                                        ? 'bg-primary border-primary-dark text-white shadow-[0_5px_0_#da8484]'
                                         : 'bg-transparent hover:shadow-none hover:translate-y-[5px] shadow-[0_5px_0_#de9292]'
                                 )}
                             >

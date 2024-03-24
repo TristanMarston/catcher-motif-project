@@ -15,6 +15,14 @@ const Holden = () => {
     const { xPos, setXPos, movementEnabled, progress } = context;
     const [keyState, setKeyState] = useState<{ [key: string]: boolean }>({});
 
+    const [inputMethod, setInputMethod] = useState<string>('unknown');
+
+    useEffect(() => {
+        if (!('ontouchstart' in window) && !navigator.maxTouchPoints) setInputMethod('mouse');
+        else if ('ontouchstart' in window || navigator.maxTouchPoints) setInputMethod('touch');
+        else setInputMethod('unknown');
+    }, []);
+
     const handleKeyPress = (event: KeyboardEvent) => {
         setKeyState((prevState) => ({
             ...prevState,
@@ -29,29 +37,30 @@ const Holden = () => {
         }));
     };
 
-    const moveCharacter = () => {
-        if (movementEnabled) {
-            if (keyState['ArrowLeft'] || keyState['a'] || keyState['left']) {
-                setXPos((prevX) => (prevX - 5 >= 0 && movementEnabled ? prevX - 5 : prevX)); // Move left by reducing x position
-            }
-            if (keyState['ArrowRight'] || keyState['d'] || keyState['right']) {
-                setXPos((prevX) => (movementEnabled ? prevX + 5 : prevX)); // Move right by increasing x position
-            }
-        }
-    };
-
     useEffect(() => {
         window.addEventListener('keydown', handleKeyPress);
         window.addEventListener('keyup', handleKeyRelease);
 
         const interval = setInterval(moveCharacter, 1000 / 120); // Adjust this value for smoother movement
+        if (!movementEnabled) clearInterval(interval);
+
+        function moveCharacter() {
+            if (movementEnabled) {
+                if (keyState['ArrowLeft'] || keyState['a'] || keyState['left']) {
+                    setXPos((prevX) => (prevX - 5 >= 0 && movementEnabled ? prevX - 5 : prevX)); // Move left by reducing x position
+                }
+                if (keyState['ArrowRight'] || keyState['d'] || keyState['right']) {
+                    setXPos((prevX) => (movementEnabled ? prevX + 5 : prevX)); // Move right by increasing x position
+                }
+            }
+        }
 
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
             window.removeEventListener('keyup', handleKeyRelease);
             clearInterval(interval);
         };
-    }, [keyState]);
+    }, [keyState, movementEnabled]);
 
     const touchMove = (direction: string) => {
         setKeyState((prevState) => ({
@@ -88,19 +97,19 @@ const Holden = () => {
                 <div className='absolute -bottom-28 left-0 w-full flex justify-center gap-5'>
                     <CircleChevronLeft
                         strokeWidth={2.5}
-                        className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer select-none border-transparent'
-                        onMouseDown={() => touchMove('left')}
-                        onMouseUp={() => touchEnd('left')}
-                        onTouchStart={() => touchMove('left')}
-                        onTouchEnd={() => touchEnd('left')}
+                        className='w-14 h-14 hover:scale-110 rounded-full transition-all cursor-pointer select-none border-transparent'
+                        onMouseDown={() => (inputMethod == 'mouse' && movementEnabled ? touchMove('left') : {})}
+                        onMouseUp={() => (inputMethod == 'mouse' && movementEnabled ? touchEnd('left') : {})}
+                        onTouchStart={() => (inputMethod == 'touch' ? touchMove('left') : {})}
+                        onTouchEnd={() => (inputMethod == 'touch' ? touchEnd('left') : {})}
                     />
                     <CircleChevronRight
                         strokeWidth={2.5}
-                        className='w-14 h-14 hover:bg-background-dark rounded-full transition-all cursor-pointer select-none border-transparent'
-                        onMouseDown={() => touchMove('right')}
-                        onMouseUp={() => touchEnd('right')}
-                        onTouchStart={() => touchMove('right')}
-                        onTouchEnd={() => touchEnd('right')}
+                        className='w-14 h-14 hover:scale-110 rounded-full transition-all cursor-pointer select-none border-transparent'
+                        onMouseDown={() => (inputMethod == 'mouse' && movementEnabled ? touchMove('right') : {})}
+                        onMouseUp={() => (inputMethod == 'mouse' && movementEnabled ? touchEnd('right') : {})}
+                        onTouchStart={() => (inputMethod == 'touch' ? touchMove('right') : {})}
+                        onTouchEnd={() => (inputMethod == 'touch' ? touchEnd('right') : {})}
                     />
                 </div>
             </Transition>

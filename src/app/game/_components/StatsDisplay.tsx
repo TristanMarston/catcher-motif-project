@@ -3,6 +3,12 @@ import { Smile, Meh, Frown, BadgeDollarSign, Cigarette } from 'lucide-react';
 import { useGameContext } from '../context';
 import React from 'react';
 
+type Props = {
+    happiness: number;
+    money: number;
+    innocence: number;
+};
+
 type StatDisplay = {
     name: string;
     value: number;
@@ -15,13 +21,7 @@ type StatsDisplayIconProps = {
     max: number;
 };
 
-const StatsDisplay: React.FC = () => {
-    const context = useGameContext();
-    if (context === undefined) {
-        throw new Error('useContext(GameContext) must be used within a GameContext.Provider');
-    }
-    const { happiness, money, innocence } = context;
-
+const StatsDisplay = ({ happiness, money, innocence }: Props) => {
     const statsArray: StatDisplay[] = [
         { name: 'happiness', value: happiness, max: happiness < 100 ? 100 : happiness },
         { name: 'money', value: money, max: money < 50 ? 50 : money },
